@@ -6,7 +6,6 @@
 
 <body>
 <canvas id="canvas3" width="600" height="400"></canvas>
-
 <script type="text/python3">
 from browser import document
 import script1
@@ -107,7 +106,162 @@ canvasText(100+inc*4,  80+h*7, 20, ")", "", "", "4", "black", ctx)
 canvasDot(100+inc*1,  80+h*8, 5, "red", ctx)
 </script>
 
+<br /><br />
+上述繪圖的原始碼如下:
+
+<pre class="brush: python">
+<canvas id="canvas3" width="600" height="400"></canvas>
+<script type="text/python3">
+from browser import document
+import script1
+import math
+# 準備繪圖畫布
+canvas = document["canvas3"]
+ctx = canvas.getContext("2d")
+# save original state
+ctx.save()
+ctx.transform(1, 0, 0, -1, 0, canvas.height)
+
+def newCoord(x, y):
+    global canvas
+    newy = canvas.height - y
+    return x, newy
+
+def background(x, y, xinc, yinc, xnum, ynum, ctx):
+    # 水平線
+    for i in range(ynum+1):
+        ctx.beginPath()
+    # 設定線的寬度為 1 個單位
+        if i == 0:
+            ctx.lineWidth = 7
+        else:
+            ctx.lineWidth = 1
+        ctx.moveTo(x-1, y+i*yinc)
+        ctx.lineTo(x+xnum*xinc+1, y+i*yinc)
+        # 設定顏色為藍色, 也可以使用 "rgb(0, 0, 255)" 字串設定顏色值
+        ctx.strokeStyle = "blue"
+        ctx.stroke()
+        ctx.closePath()
+
+    # 垂直線
+    for i in range(xnum+1):
+        ctx.beginPath()
+    # 設定線的寬度為 1 個單位
+        ctx.lineWidth = 1
+        ctx.moveTo(x+i*xinc, y)
+        ctx.lineTo(x+i*xinc, y+ynum*yinc)
+        # 設定顏色為藍色, 也可以使用 "rgb(0, 0, 255)" 字串設定顏色值
+        ctx.strokeStyle = "blue"
+        ctx.stroke()
+        ctx.closePath()
+
+def canvasText(x, y, fontSize, string, sup, sub, center, color, ctx):
+    ctx.beginPath()
+    ctx.fillStyle = color
+    ctx.strokeStyle = color
+    #ctx.font = "20px Arial"
+    ctx.font = str(fontSize)+ "px Arial"
+    if center != "":
+        ctx.fillText(string, x+fontSize/float(center), y)
+    else:
+        ctx.fillText(string, x, y)
+    ctx.font = str(fontSize-8)+ "px Arial"
+    if sup != "":
+        ctx.fillText(sup, x+fontSize/1.6, y-fontSize/2)
+    if sub != "":
+        ctx.fillText(sub, x+fontSize/1.6, y+fontSize/4)
+    ctx.fill()
+    ctx.stroke()
+    ctx.closePath()
+
+def canvasDot(x, y, r, color, ctx):
+    ctx.beginPath()
+    #ctx.fillStyle = 'black'
+    ctx.fillStyle = color
+    #ctx.strokeStyle = "black"
+    ctx.strokeStyle = color
+    #ctx.arc(50, 80, 9, 0, 2*math.pi, False)
+    ctx.arc(x, y, r, 0, 2*math.pi, False)
+    # 為了疊上各把位的音名, 暫時不填色
+    ctx.fill()
+    ctx.stroke()
+
+w = 20
+h = 30
+# 畫座標軸線
+script1.axises(ctx)
+ctx.restore()
+background(100, 100, w, h, 5, 5, ctx)
+mylist = ["E", "A", "D", "G", "B", "E"]
+num = 0
+for s in mylist:
+    #canvasText(100,  80, 20, "A", "b", "", "", "black", ctx)
+    canvasText(100+num*w,  80, 20, s, "", "", "", "black", ctx)
+    num = num + 1
+
+ctx.save()
+canvasText(100+num*w,  80, 20, "A", "b", "", "", "black", ctx)
+num = num + 1
+canvasText(100,  80+h*7, 20, "(", "", "", "2.5", "black", ctx)
+inc = 18
+canvasText(100+inc*1,  80+h*7, 20, "x", "2", "1", "", "black", ctx)
+canvasText(100+inc*2,  80+h*7, 20, ",", "", "", "4", "black", ctx)
+canvasText(100+inc*3,  80+h*7, 20, "y", "", "1", "", "black", ctx)
+canvasText(100+inc*4,  80+h*7, 20, ")", "", "", "4", "black", ctx)
+canvasDot(100+inc*1,  80+h*8, 5, "red", ctx)
+</script>
+</pre>
+
 <p>以上為 canvas3, 座標軸 x 向右為正, y 向上為正.
+
+以下將放入 passive walker 零組件檔案 stl 檢視以及各題目操作及  V-rep 操作與動態模擬影片, 最後將所有產出檔案送到 mde2a2 Fossil SCM 倉儲中的學號目錄中.
+<!-- for code highlight -->
+<script type="text/javascript" src="https://coursemdetw.github.io/project_site_files/files/syntaxhighlighter/shCore.js"></script>
+<script type="text/javascript" src="https://coursemdetw.github.io/project_site_files/files/syntaxhighlighter/shBrushJScript.js"></script>
+<script type="text/javascript" src="https://coursemdetw.github.io/project_site_files/files/syntaxhighlighter/shBrushJava.js"></script>
+<script type="text/javascript" src="https://coursemdetw.github.io/project_site_files/files/syntaxhighlighter/shBrushPython.js"></script>
+<script type="text/javascript" src="https://coursemdetw.github.io/project_site_files/files/syntaxhighlighter/shBrushSql.js"></script>
+<script type="text/javascript" src="https://coursemdetw.github.io/project_site_files/files/syntaxhighlighter/shBrushXml.js"></script>
+<script type="text/javascript" src="https://coursemdetw.github.io/project_site_files/files/syntaxhighlighter/shBrushPhp.js"></script>
+<script type="text/javascript" src="https://coursemdetw.github.io/project_site_files/files/syntaxhighlighter/shBrushCpp.js"></script>
+<script type="text/javascript" src="https://coursemdetw.github.io/project_site_files/files/syntaxhighlighter/shBrushCss.js"></script>
+<script type="text/javascript" src="https://coursemdetw.github.io/project_site_files/files/syntaxhighlighter/shBrushCSharp.js"></script>
+<script type="text/javascript" src="https://coursemdetw.github.io/project_site_files/files/syntaxhighlighter/shBrushBash.js"></script>
+<script type='text/javascript'>
+	(function(){
+		var corecss = document.createElement('link');
+		var themecss = document.createElement('link');
+		var corecssurl = "https://chiamingyen.github.io/kmolab_data/files/syntaxhighlighter/css/shCore.css";
+		if ( corecss.setAttribute ) {
+				corecss.setAttribute( "rel", "stylesheet" );
+				corecss.setAttribute( "type", "text/css" );
+				corecss.setAttribute( "href", corecssurl );
+		} else {
+				corecss.rel = "stylesheet";
+				corecss.href = corecssurl;
+		}
+		document.getElementsByTagName("head")[0].insertBefore( corecss, document.getElementById("syntaxhighlighteranchor") );
+		var themecssurl = "https://chiamingyen.github.io/kmolab_data/files/syntaxhighlighter/css/shThemeDefault.css?ver=3.0.9b";
+		if ( themecss.setAttribute ) {
+				themecss.setAttribute( "rel", "stylesheet" );
+				themecss.setAttribute( "type", "text/css" );
+				themecss.setAttribute( "href", themecssurl );
+		} else {
+				themecss.rel = "stylesheet";
+				themecss.href = themecssurl;
+		}
+		//document.getElementById("syntaxhighlighteranchor").appendChild(themecss);
+		document.getElementsByTagName("head")[0].insertBefore( themecss, document.getElementById("syntaxhighlighteranchor") );
+	})();
+	SyntaxHighlighter.config.strings.expandSource = '+ expand source';
+	SyntaxHighlighter.config.strings.help = '?';
+	SyntaxHighlighter.config.strings.alert = 'SyntaxHighlighter\n\n';
+	SyntaxHighlighter.config.strings.noBrush = 'Can\'t find brush for: ';
+	SyntaxHighlighter.config.strings.brushNotHtmlScript = 'Brush wasn\'t configured for html-script option: ';
+	SyntaxHighlighter.defaults['pad-line-numbers'] = false;
+	SyntaxHighlighter.defaults['toolbar'] = false;
+	SyntaxHighlighter.all();
+</script>
 <!-- 啟動 Brython -->
 <script>
 window.onload=function(){
