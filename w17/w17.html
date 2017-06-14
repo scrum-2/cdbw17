@@ -1,0 +1,124 @@
+<html>
+
+<head>
+<meta charset="utf-8">
+</head>
+
+<body>
+<canvas id="canvas3" width="600" height="400"></canvas>
+
+<script type="text/python3">
+from browser import document
+import script1
+import math
+# 準備繪圖畫布
+canvas = document["canvas3"]
+ctx = canvas.getContext("2d")
+# save original state
+ctx.save()
+ctx.transform(1, 0, 0, -1, 0, canvas.height)
+
+def newCoord(x, y):
+    global canvas
+    newy = canvas.height - y
+    return x, newy
+
+def background(x, y, xinc, yinc, xnum, ynum, ctx):
+    # 水平線
+    for i in range(ynum+1):
+        ctx.beginPath()
+    # 設定線的寬度為 1 個單位
+        if i == 0:
+            ctx.lineWidth = 7
+        else:
+            ctx.lineWidth = 1
+        ctx.moveTo(x-1, y+i*yinc)
+        ctx.lineTo(x+xnum*xinc+1, y+i*yinc)
+        # 設定顏色為藍色, 也可以使用 "rgb(0, 0, 255)" 字串設定顏色值
+        ctx.strokeStyle = "blue"
+        ctx.stroke()
+        ctx.closePath()
+
+    # 垂直線
+    for i in range(xnum+1):
+        ctx.beginPath()
+    # 設定線的寬度為 1 個單位
+        ctx.lineWidth = 1
+        ctx.moveTo(x+i*xinc, y)
+        ctx.lineTo(x+i*xinc, y+ynum*yinc)
+        # 設定顏色為藍色, 也可以使用 "rgb(0, 0, 255)" 字串設定顏色值
+        ctx.strokeStyle = "blue"
+        ctx.stroke()
+        ctx.closePath()
+
+def canvasText(x, y, fontSize, string, sup, sub, center, color, ctx):
+    ctx.beginPath()
+    ctx.fillStyle = color
+    ctx.strokeStyle = color
+    #ctx.font = "20px Arial"
+    ctx.font = str(fontSize)+ "px Arial"
+    if center != "":
+        ctx.fillText(string, x+fontSize/float(center), y)
+    else:
+        ctx.fillText(string, x, y)
+    ctx.font = str(fontSize-8)+ "px Arial"
+    if sup != "":
+        ctx.fillText(sup, x+fontSize/1.6, y-fontSize/2)
+    if sub != "":
+        ctx.fillText(sub, x+fontSize/1.6, y+fontSize/4)
+    ctx.fill()
+    ctx.stroke()
+    ctx.closePath()
+
+def canvasDot(x, y, r, color, ctx):
+    ctx.beginPath()
+    #ctx.fillStyle = 'black'
+    ctx.fillStyle = color
+    #ctx.strokeStyle = "black"
+    ctx.strokeStyle = color
+    #ctx.arc(50, 80, 9, 0, 2*math.pi, False)
+    ctx.arc(x, y, r, 0, 2*math.pi, False)
+    # 為了疊上各把位的音名, 暫時不填色
+    ctx.fill()
+    ctx.stroke()
+
+w = 20
+h = 30
+# 畫座標軸線
+script1.axises(ctx)
+ctx.restore()
+background(100, 100, w, h, 5, 5, ctx)
+mylist = ["E", "A", "D", "G", "B", "E"]
+num = 0
+for s in mylist:
+    #canvasText(100,  80, 20, "A", "b", "", "", "black", ctx)
+    canvasText(100+num*w,  80, 20, s, "", "", "", "black", ctx)
+    num = num + 1
+
+ctx.save()
+canvasText(100+num*w,  80, 20, "A", "b", "", "", "black", ctx)
+num = num + 1
+canvasText(100,  80+h*7, 20, "(", "", "", "2.5", "black", ctx)
+inc = 18
+canvasText(100+inc*1,  80+h*7, 20, "x", "2", "1", "", "black", ctx)
+canvasText(100+inc*2,  80+h*7, 20, ",", "", "", "4", "black", ctx)
+canvasText(100+inc*3,  80+h*7, 20, "y", "", "1", "", "black", ctx)
+canvasText(100+inc*4,  80+h*7, 20, ")", "", "", "4", "black", ctx)
+canvasDot(100+inc*1,  80+h*8, 5, "red", ctx)
+</script>
+
+<p>以上為 canvas3, 座標軸 x 向右為正, y 向上為正.
+<!-- 啟動 Brython -->
+<script>
+window.onload=function(){
+// 設定 data/py 為共用程式路徑
+brython({debug:1, pythonpath:['./../subw17/w17']});
+}
+</script>
+<!-- 導入 Brython 標準程式庫 -->
+<script src="brython.js"></script>
+<script src="brython_stdlib.js"></script>
+
+</body>
+
+</html>
