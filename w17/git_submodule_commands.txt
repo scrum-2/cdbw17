@@ -1,0 +1,43 @@
+Welcome to the 2016fallcpa wiki!
+
+2016fallcpa 為 2016Fall CP 計算機程式課程甲班的分組評量倉儲, 各分組的倉儲按照組序, 分別以 g1, g2, g3... 作為代號, 納入作為 submodules.
+
+其中 g100 有兩名成員 scrum-1 與 scrum-2, 主要用來測試與示範相關功能之用.
+
+在 2016fallcpa 倉儲中設定 g100 子模組的流程:
+
+git clone 2016fallcpa 倉儲到近端
+已知 g100 的組長為 scrum-1, 且 scrum-1 已經配合課程評分規劃, 在其帳號下建立 https://github.com/scrum-1/2016fallcp_ag100 分組倉儲
+2016fallcpa 的擁有者在近端 git clone 2016fallcpa 倉儲後, 更換目錄進入 2016fallcpa, 利用 git branch gh-pages 建立分支, 然後以 git checkout gh-pages 簽出分支版本資料 (或稱切換分支), 然後執行 git submodule add -b gh-pages https://github.com/scrum-1/2016fallcp_ag100 g100 (表示要追蹤子模組的 gh-pages branch, 且之前已經將 2016fallcpa 倉儲的 default branch 設為 gh-pages, 因此 git clone 後 default 就是 gh-pages 分支), 就可以將 ag100 倉儲納入 g100 子目錄中, 且新增 .gitmodules 模組設定檔, 而且在 .git/config 與 .git/modules 目錄中新增子模組相關設定資料.
+假如任何人希望 git clone 帶有子模組的倉儲, 則必須在 git clone 後執行 git submodule init, 啟始子模組, 然後利用 git submodule update 取下子模組的對應版本資料 (對應版本紀錄在 .git/modules/g100/refs/heads/master 檔案中.
+假如帶有子模組的倉儲管理者, 希望更新某一子模組的對應版本, 則必須先確定倉儲分支, 然後 cd 到子模組目錄中, 利用 git pull 後, 然後回到上層倉儲進行版本的提交推送. 假如希望拉回所有子模組的對應版本內容, 則使用 git pull origin gh-pages --recurse-submodules, 當然若想拉回 master 分支, 則使用 git pull origin master --recurse-submodules
+假如希望將所有子模組的對應版本更新到目前最新提交, 使用 git submodule foreach "(git checkout gh-pages; git pull)&"
+當利用上述指令完成更新子模組的對應版本之後, 必須進行提交推送, 將改版資料送到遠端, 之後則透過 git submodule update --init --recursive 將此對應版本的子模組取到近端, 其中因為子模組中還有子模組, 而此更新對這些新加入的子子模組並沒有 --init, 因此下子模組更新時, 要納入 --init
+計算機程式甲班分組評量網頁: https://mdecourse.github.io/2016fallcpa/
+
+在近端, 取下某一倉儲的所有資料, 包括子模組與子模組下的子子模組等:
+
+git clone repos-url
+
+cd repos_dir
+
+git submodule update --init --recursive
+
+或者直接
+
+git clone --recursive repos-url
+
+----
+
+指令整理:
+
+git submodule add -b gh-pages https://github.com/scrum-1/2016fallcp_ag100 g100
+
+執行後, 將新增 .gitmodules 模組設定檔, 而且在 .git/config 與 .git/modules 目錄中新增子模組相關設定資料.
+
+git clone 帶有子模組的倉儲:
+
+必須在 git clone 後執行 git submodule init, 啟始子模組, 然後利用 git submodule update 取下子模組的對應版本資料 (對應版本紀錄在 .git/modules/g100/refs/heads/master 檔案中.
+
+帶有子模組的倉儲管理者, 希望更新某一子模組的對應版本, 則必須先確定倉儲分支, 然後 cd 到子模組目錄中, 利用 git pull 後, 然後回到上層倉儲進行版本的提交推送. 假如希望拉回所有子模組的對應版本內容, 則使用 git pull origin gh-pages --recurse-submodules, 當然若想拉回 master 分支, 則使用 git pull origin master --recurse-submodules
+假如希望將所有子模組的對應版本更新到目前最新提交, 使用 git submodule foreach "(git checkout gh-pages; git pull)&"
